@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Error Response Schema",
+  "description": "Schema for error responses returned by the IONOS Billing API",
+  "type": "object",
+  "required": [
+    "status",
+    "code",
+    "message"
+  ],
+  "properties": {
+    "status": {
+      "type": "integer",
+      "description": "HTTP status code"
+    },
+    "code": {
+      "type": "string",
+      "description": "Error code identifier"
+    },
+    "message": {
+      "type": "string",
+      "description": "Human-readable error message",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false
+}

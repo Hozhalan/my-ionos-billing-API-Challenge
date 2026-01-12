@@ -1,0 +1,97 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Products Response Schema",
+  "description": "Schema for products and pricing data responses from the IONOS Billing API",
+  "type": "object",
+  "required": [
+    "metadata",
+    "liability",
+    "products"
+  ],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "description": "Metadata about the products request",
+      "required": [
+        "contractId",
+        "customerId",
+        "reference"
+      ],
+      "properties": {
+        "contractId": {
+          "type": "integer",
+          "description": "Unique identifier for the contract",
+          "minimum": 1
+        },
+        "customerId": {
+          "type": "integer",
+          "description": "Unique identifier for the customer",
+          "minimum": 1
+        },
+        "reference": {
+          "type": "string",
+          "description": "Contract or customer reference",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "liability": {
+      "type": "string",
+      "description": "Liability information or identifier",
+      "minLength": 1
+    },
+    "products": {
+      "type": "array",
+      "description": "Array of available products with pricing",
+      "items": {
+        "type": "object",
+        "required": [
+          "meterId",
+          "meterDesc",
+          "unit",
+          "unitCost"
+        ],
+        "properties": {
+          "meterId": {
+            "type": "string",
+            "description": "Unique meter/product identifier",
+            "minLength": 1
+          },
+          "meterDesc": {
+            "type": "string",
+            "description": "Product or meter description",
+            "minLength": 1
+          },
+          "unit": {
+            "type": "string",
+            "description": "Unit of measurement for the product",
+            "minLength": 1
+          },
+          "unitCost": {
+            "type": "object",
+            "description": "Cost per unit with currency",
+            "required": [
+              "quantity",
+              "unit"
+            ],
+            "properties": {
+              "quantity": {
+                "type": "number",
+                "description": "Numeric cost value"
+              },
+              "unit": {
+                "type": "string",
+                "description": "Currency unit",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

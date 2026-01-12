@@ -1,0 +1,264 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Invoice Response Schema",
+  "description": "Schema for invoice data responses from the IONOS Billing API",
+  "type": "object",
+  "required": [
+    "metadata",
+    "datacenters",
+    "total"
+  ],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "description": "Invoice metadata and identification information",
+      "required": [
+        "invoiceId",
+        "contractId",
+        "customerId",
+        "createdDate",
+        "startDate",
+        "endDate",
+        "postingPeriod",
+        "finallyPosted"
+      ],
+      "properties": {
+        "invoiceId": {
+          "type": "string",
+          "description": "Unique invoice identifier",
+          "minLength": 1
+        },
+        "contractId": {
+          "type": "integer",
+          "description": "Unique identifier for the contract",
+          "minimum": 1
+        },
+        "customerId": {
+          "type": "integer",
+          "description": "Unique identifier for the customer",
+          "minimum": 1
+        },
+        "createdDate": {
+          "type": "string",
+          "description": "Invoice creation date (ISO 8601 format)",
+          "minLength": 1
+        },
+        "startDate": {
+          "type": "string",
+          "description": "Invoice period start date in YYYY-MM-DD format",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "examples": [
+            "2024-01-01"
+          ]
+        },
+        "endDate": {
+          "type": "string",
+          "description": "Invoice period end date in YYYY-MM-DD format",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "examples": [
+            "2024-01-31"
+          ]
+        },
+        "postingPeriod": {
+          "type": "string",
+          "description": "Posting period in YYYY-MM format",
+          "pattern": "^\\d{4}-\\d{2}$",
+          "examples": [
+            "2024-01"
+          ]
+        },
+        "finallyPosted": {
+          "type": "boolean",
+          "description": "Whether the invoice has been finally posted"
+        },
+        "reference": {
+          "type": "string",
+          "description": "Invoice reference number (optional)"
+        },
+        "resellerRef": {
+          "type": "string",
+          "description": "Reseller reference (optional)"
+        }
+      },
+      "additionalProperties": false
+    },
+    "datacenters": {
+      "type": "array",
+      "description": "Array of datacenter invoice line items",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "location",
+          "productGroup",
+          "meters"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Datacenter identifier",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Datacenter name",
+            "minLength": 1
+          },
+          "location": {
+            "type": "string",
+            "description": "Datacenter location",
+            "minLength": 1
+          },
+          "productGroup": {
+            "type": "string",
+            "description": "Product group identifier",
+            "minLength": 1
+          },
+          "meters": {
+            "type": "array",
+            "description": "Array of meter line items",
+            "items": {
+              "type": "object",
+              "required": [
+                "meterId",
+                "meterDesc",
+                "productGroup",
+                "quantity",
+                "rate",
+                "amount"
+              ],
+              "properties": {
+                "meterId": {
+                  "type": "string",
+                  "description": "Meter identifier",
+                  "minLength": 1
+                },
+                "meterDesc": {
+                  "type": "string",
+                  "description": "Meter description",
+                  "minLength": 1
+                },
+                "productGroup": {
+                  "type": "string",
+                  "description": "Product group for this meter",
+                  "minLength": 1
+                },
+                "quantity": {
+                  "type": "object",
+                  "description": "Quantity with unit",
+                  "required": [
+                    "quantity",
+                    "unit"
+                  ],
+                  "properties": {
+                    "quantity": {
+                      "type": "number",
+                      "description": "Numeric quantity value"
+                    },
+                    "unit": {
+                      "type": "string",
+                      "description": "Unit of measurement",
+                      "minLength": 1
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "rate": {
+                  "type": "object",
+                  "description": "Rate with unit",
+                  "required": [
+                    "quantity",
+                    "unit"
+                  ],
+                  "properties": {
+                    "quantity": {
+                      "type": "number",
+                      "description": "Numeric rate value"
+                    },
+                    "unit": {
+                      "type": "string",
+                      "description": "Currency or unit",
+                      "minLength": 1
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "amount": {
+                  "type": "object",
+                  "description": "Amount with unit",
+                  "required": [
+                    "quantity",
+                    "unit"
+                  ],
+                  "properties": {
+                    "quantity": {
+                      "type": "number",
+                      "description": "Numeric amount value"
+                    },
+                    "unit": {
+                      "type": "string",
+                      "description": "Currency unit",
+                      "minLength": 1
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "rebate": {
+            "type": "object",
+            "description": "Rebate information (optional)",
+            "properties": {
+              "amount": {
+                "type": "object",
+                "description": "Rebate amount with unit",
+                "required": [
+                  "quantity",
+                  "unit"
+                ],
+                "properties": {
+                  "quantity": {
+                    "type": "number",
+                    "description": "Numeric rebate amount"
+                  },
+                  "unit": {
+                    "type": "string",
+                    "description": "Currency unit",
+                    "minLength": 1
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "total": {
+      "type": "object",
+      "description": "Total invoice amount",
+      "required": [
+        "quantity",
+        "unit"
+      ],
+      "properties": {
+        "quantity": {
+          "type": "number",
+          "description": "Total numeric amount"
+        },
+        "unit": {
+          "type": "string",
+          "description": "Currency unit",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,155 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EVN Response Schema",
+  "description": "Schema for EVN (Extended Virtual Network) data responses from the IONOS Billing API",
+  "type": "object",
+  "required": [
+    "metadata",
+    "datacenters",
+    "evnCSV"
+  ],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "description": "Metadata about the EVN data request",
+      "required": [
+        "customerId",
+        "contractId",
+        "period"
+      ],
+      "properties": {
+        "customerId": {
+          "type": "integer",
+          "description": "Unique identifier for the customer",
+          "minimum": 1
+        },
+        "contractId": {
+          "type": "integer",
+          "description": "Unique identifier for the contract",
+          "minimum": 1
+        },
+        "period": {
+          "type": "string",
+          "description": "Billing period in YYYY-MM format",
+          "pattern": "^\\d{4}-\\d{2}$",
+          "examples": [
+            "2024-01",
+            "2024-12"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "datacenters": {
+      "type": "array",
+      "description": "Array of datacenter EVN data",
+      "items": {
+        "type": "object",
+        "required": [
+          "vdcUUID",
+          "name",
+          "data"
+        ],
+        "properties": {
+          "vdcUUID": {
+            "type": "string",
+            "description": "Virtual Data Center UUID",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Datacenter name",
+            "minLength": 1
+          },
+          "data": {
+            "type": "array",
+            "description": "Array of resource utilization data points",
+            "items": {
+              "type": "object",
+              "required": [
+                "resourceType",
+                "resourceUUID",
+                "intervalMin",
+                "intervalDivisor",
+                "from",
+                "to",
+                "itemStub",
+                "value",
+                "valueDivisor"
+              ],
+              "properties": {
+                "resourceType": {
+                  "type": "string",
+                  "description": "Type of resource being measured",
+                  "minLength": 1
+                },
+                "resourceUUID": {
+                  "type": "string",
+                  "description": "Unique identifier for the resource",
+                  "minLength": 1
+                },
+                "intervalMin": {
+                  "type": "integer",
+                  "description": "Interval duration in minutes",
+                  "minimum": 1
+                },
+                "intervalDivisor": {
+                  "type": "integer",
+                  "description": "Divisor for interval calculation",
+                  "minimum": 1
+                },
+                "from": {
+                  "type": "string",
+                  "description": "Start timestamp in ISO 8601 format",
+                  "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{3})?Z$",
+                  "examples": [
+                    "2024-01-01T00:00:00Z",
+                    "2024-01-01T00:00:00.000Z"
+                  ]
+                },
+                "to": {
+                  "type": "string",
+                  "description": "End timestamp in ISO 8601 format",
+                  "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{3})?Z$",
+                  "examples": [
+                    "2024-01-01T23:59:59Z",
+                    "2024-01-01T23:59:59.999Z"
+                  ]
+                },
+                "itemStub": {
+                  "type": "string",
+                  "description": "Item identifier stub",
+                  "minLength": 1
+                },
+                "value": {
+                  "type": "number",
+                  "description": "Measured value"
+                },
+                "valueDivisor": {
+                  "type": "integer",
+                  "description": "Divisor for value calculation",
+                  "minimum": 1
+                },
+                "additionalParameters": {
+                  "type": "string",
+                  "description": "Additional parameters as string (optional)"
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "evnCSV": {
+      "type": "array",
+      "description": "EVN data in CSV format (array of CSV lines)",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,52 @@
+name: Test Suite
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run test suite
+        run: npm test
+      
+      - name: Generate test coverage
+        run: npm run test:coverage
+      
+      - name: Upload test report
+        # HTML test report is generated during 'npm test' by jest-html-reporter
+        # Report location: reports/test-report.html (configured in jest.config.js)
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: reports/test-report.html
+          retention-days: 7
+          if-no-files-found: ignore
+      
+      - name: Upload coverage reports
+        # Coverage report is generated during 'npm test:coverage'
+        # Report location: coverage/ (configured in jest.config.js)
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 7
+          if-no-files-found: ignore
